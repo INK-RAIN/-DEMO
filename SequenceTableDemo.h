@@ -410,3 +410,46 @@ int MSqt_ExtendedSpace(Sqtable& L,int Size) {
 	return True;
 }
 
+
+////////////////////////////////////关于顺序表的实现暂时告一段落，下面是关于链表的实现//////////////////////////
+typedef struct {
+	LinkTable* LTPoint = NULL;
+	int *element = (int*)malloc(1 * sizeof(int));
+}LinkTable,*linkTable;
+
+
+//重置链表用到的递归函数
+bool InternalFuntion_Recursion_ForInitial(LinkTable *L) {
+	if (L->LTPoint==NULL) {
+		free(L->element);
+		free(L->LTPoint);
+		free(L);
+		return true;
+	}
+	else if(InternalFuntion_Recursion_ForInitial(L->LTPoint)){
+		free(L->element);
+		free(L->LTPoint);
+		free(L);
+		return true;
+	}
+}
+
+
+//重置链表
+int LT_Initial(LinkTable &L) {
+	if (L.LTPoint != NULL) {
+		InternalFuntion_Recursion_ForInitial(L.LTPoint);
+	}
+	return True;
+}
+
+
+//链表新增数据
+int LT_AddElements(LinkTable &L) {
+	LinkTable *TemporaryTable;
+	while (*TemporaryTable->LTPoint!=NULL)
+	{
+		TemporaryTable = TemporaryTable->LTPoint;
+	}
+
+}
