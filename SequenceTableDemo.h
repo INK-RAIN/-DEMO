@@ -445,11 +445,36 @@ int LT_Initial(LinkTable &L) {
 
 
 //链表新增数据
-int LT_AddElements(LinkTable &L) {
+int LT_AddElements(LinkTable &L,int elemnet) {
 	LinkTable *TemporaryTable;
+	TemporaryTable->LTPoint = L.LTPoint;
 	while (*TemporaryTable->LTPoint!=NULL)
 	{
 		TemporaryTable = TemporaryTable->LTPoint;
 	}
+	LinkTable *NewLTable;
+	TemporaryTable->LTPoint = NewLTable;
+	*NewLTable->element = elemnet;
+	return True;
+}
+
+
+//查询链表长度
+int LT_SelectLength(LinkTable L) {
+	int Long = 1;
+	LinkTable* TemporaryTable;
+	TemporaryTable->LTPoint = L.LTPoint;
+	while (*TemporaryTable->LTPoint != NULL)
+	{
+		TemporaryTable = TemporaryTable->LTPoint;
+		Long++;
+	}
+	return Long;
+}
+
+
+
+//链表插入数据
+int LT_InsertElements(LinkTable& L, int location, int element) {
 
 }
