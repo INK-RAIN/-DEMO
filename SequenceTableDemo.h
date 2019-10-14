@@ -421,16 +421,116 @@ int MSqt_Sort(Sqtable &L,int SortType) {
 
 
 //两顺序表归并
-int MSqt_Merge(Sqtable &MainTable, Sqtable OtherTable,bool IsOrderly,bool CanNumberRepeat,bool RepeatOperationOnMainTable) {
+Sqtable MSqt_Merge(Sqtable &MainTable, Sqtable OtherTable,bool IsOrderly,bool CanNumberRepeat,bool RepeatOperationOnMainTable) {
 	if (RepeatOperationOnMainTable) {
-
+		//第一步处理：创建新表或操作旧表
+		Sqtable *newtable;
+		MSqt_Initial(*newtable);
+		for (int i = 0; i <= MainTable.Length - 1; i++) {
+			MSqt_Add(*newtable, MainTable.elements[i]);
+		}
+		for (int i = 0; i <= OtherTable.Length - 1; i++) {
+			MSqt_Add(*newtable, OtherTable.elements[i]);
+		}
+		if (IsOrderly) {
+			//第二步处理：是否排序
+			MSqt_Sort(*newtable, 0);
+			if (CanNumberRepeat) {
+				//第三步处理：是否查重
+				//RepeatOperationOnMainTable&&IsOrderly&&CanNumberRepeat
+				return *newtable;
+			}
+			else {
+				//第三步处理：是否查重
+				//RepeatOperationOnMainTable&&IsOrderly   NO(NumberRepeat)
+				int Number = newtable->elements[0];
+				for (int i = 1; i <= newtable->Length - 1; i++) {
+					if (newtable->elements[i] > Number) {
+						Number = newtable->elements[i];
+					}
+					else {
+						MSqt_Drop(*newtable, i);
+					}
+				}
+				return *newtable;
+			}
+		}
+		else {
+			//第二步处理：是否排序
+			//do nothing
+			//**********//
+			if (CanNumberRepeat) {
+				//第三步处理：是否查重
+				//RepeatOperationOnMainTable&&CanNumberRepeat    NO(Orderly)
+				return *newtable;
+			}
+			else {
+				//第三步处理：是否查重
+				//RepeatOperationOnMainTable      NO(Orderly&&NumberRepeat)
+				for (int i = 0; i <= newtable->Length - 1; i++) {
+					for (int b = i + 1; b <= newtable->Length - 1; b++) {
+						if (newtable->elements[i] == newtable->elements[b]) {
+							MSqt_Drop(*newtable, b);
+						}
+					}
+				}
+				return *newtable;
+			}
+		}
 	}
 	else {
-
+		//第一步处理：创建新表或操作旧表
+		for (int i = 0; i <= OtherTable.Length - 1; i++) {
+			MSqt_Add(MainTable, OtherTable.elements[i]);
+		}
+		if (IsOrderly) {
+			//第二步处理：是否排序
+			MSqt_Sort(MainTable, 0);
+			if (CanNumberRepeat) {
+				//第三步处理：是否查重
+				//IsOrderly&&CanNumberRepeat    NO(RepeatOperationOnMainTable)
+				return MainTable;
+			}
+			else {
+				//第三步处理：是否查重
+				//IsOrderly     NO(Orderly&&RepeatOperationOnMainTable)
+				int Number = MainTable.elements[0];
+				for (int i = 1; i <= MainTable.Length - 1; i++) {
+					if (MainTable.elements[i] > Number) {
+						Number = MainTable.elements[i];
+					}
+					else {
+						MSqt_Drop(MainTable, i);
+					}
+				}
+				return MainTable;
+			}
+		}
+		else {
+			//第二步处理：是否排序
+			//do nothing
+			//***********//
+			if (CanNumberRepeat) {
+				//第三步处理：是否查重
+				// CanNumberRepeat       NO(Orderly&&RepeatOperationOnMainTable)
+				return MainTable;
+			}
+			else {
+				//第三步处理：是否查重
+				//NO(RepeatOperationOnMainTable&&Orderly&&NumberRepeat)
+				for (int i = 0; i <= MainTable.Length - 1; i++) {
+					for (int b = i + 1; b <= MainTable.Length - 1; b++) {
+						if (MainTable.elements[i] == MainTable.elements[b]) {
+							MSqt_Drop(MainTable, b);
+						}
+					}
+				}
+				return MainTable;
+			}
+		}
 	}
-	return 0;
+	return MainTable;
 }
-
 
 
 
