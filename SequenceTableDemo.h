@@ -17,7 +17,7 @@ typedef struct {
 	int *elements;
 	int Length;
 	int LastSize;
-}Sqtable;
+}Sqtable,*sqtable;
 
 int MSqt_FillWithZero(Sqtable& L);
 //用null填满
@@ -41,6 +41,7 @@ int MSqt_Initial(Sqtable& L) {
 	L.LastSize = InitialSpace;
 	return True;
 }
+
 
 //顺序表交换元素位置
 int MSqt_SwapElems(Sqtable& L, int location_a, int location_b) {
@@ -85,19 +86,25 @@ int MSqt_FillWithZero(Sqtable& L) {
 int MSqt_ExtendedSpace(Sqtable& L, int Size) {
 	//合法性检查
 	if (Size <= 0) {
-		return  2001;
+		return  10001;
 	}
 	int* NewPoint = (int*)realloc(L.elements, (L.LastSize + Size) * sizeof(int));
 	//检查realloc函数是否分配失败，使用中间量避免影响顺序表
 	if (NewPoint != NULL) {
 		//指针更新
+		//printf("手动扩容指针更新\n");
 		L.elements = NewPoint;
-		//容量更新
+		//printf("%d\n", L.elements);
+		//容量和长度更新
 		L.LastSize = L.LastSize + Size;
+		L.Length = L.Length + Size;
+		//printf("手动扩容容量更新");
+		//printf("%d\n", L.LastSize);
 	}
 	else {
 		//如果分配失败，拒绝赋值给L.elements,避免野指针出现
-		return 1002;
+		printf("分配失败");
+		return 10002;
 	}
 	return True;
 }
@@ -113,12 +120,14 @@ int MSqt_Add(Sqtable& L, int elem) {
 		//检查realloc函数是否分配失败，使用中间量避免影响顺序表
 		if (NewPoint != NULL) {
 			//指针更新
+			//printf("指针更新\n");
 			L.elements = NewPoint;
 			//容量更新
 			L.LastSize = L.LastSize + Increased_Memory_Space;
 		}
 		else {
 			//如果分配失败，拒绝赋值给L.elements,避免野指针出现
+			printf("指针更新失败\n");
 			return 1004;
 		}
 	}
@@ -126,9 +135,17 @@ int MSqt_Add(Sqtable& L, int elem) {
 
 
 	//添加操作
-	L.elements[L.Length - 1] = elem;
-	//增加长度计数
+		//增加长度计数
 	L.Length++;
+	L.elements[L.Length - 1] = elem;
+	//printf("执行add操作");
+	//printf("%d\n",L.elements[L.Length - 1]);
+	//printf("L.Length=");
+	//printf("%d\n",L.Length);
+	//增加长度计数
+	//printf("THEN L.Length=");
+	//printf("%d\n", L.Length);
+	//printf("%d\n", L.elements[L.Length - 1]);
 	return True;
 }
 
@@ -214,6 +231,11 @@ int FinalResultOfNumCoreP(Sqtable& PositiveNumberCount, int SortType, Sqtable& L
 		//操作表地址值
 		int location = 0;
 		//直接遍历正表并输出
+		printf("正表为:");
+		for (int i = 0; i < PositiveNumberCount.Length; i++) {
+			printf("%d", PositiveNumberCount.elements[i]);
+		}
+		printf("\n");
 		for (int i = 0; i <= PositiveNumberCount.Length - 1; i++) {
 			while (PositiveNumberCount.elements[i] != 0)
 			{
@@ -222,6 +244,12 @@ int FinalResultOfNumCoreP(Sqtable& PositiveNumberCount, int SortType, Sqtable& L
 				location++;
 			}
 		}
+		printf("1号排序操作后L表为:");
+		for (int i = 0; i < L.Length;i++) {
+			printf(",");
+			printf("%d",L.elements[i]);
+		}
+		printf("\n");
 	}
 	//结束
 	//如果倒序，就倒着遍历正表
@@ -236,6 +264,11 @@ int FinalResultOfNumCoreP(Sqtable& PositiveNumberCount, int SortType, Sqtable& L
 				location++;
 			}
 		}
+		printf("2号排序操作后L表为:");
+		for (int i = 0; i < L.Length; i++) {
+			printf("%d", L.elements[i]);
+		}
+		printf("\n");
 	}
 	return True;
 
@@ -263,6 +296,11 @@ int FinalResultOfNumCore(Sqtable& PositiveNumberCount, Sqtable& NegativeNumberCo
 				location++;
 			}
 		}
+		printf("3号排序操作后L表为:");
+		for (int i = 0; i < L.Length; i++) {
+			printf("%d", L.elements[i]);
+		}
+		printf("\n");
 	}
 	//正向排序操作结束
 	//如果参数为负向排序
@@ -287,6 +325,11 @@ int FinalResultOfNumCore(Sqtable& PositiveNumberCount, Sqtable& NegativeNumberCo
 				location++;
 			}
 		}
+		printf("4号排序操作后L表为:");
+		for (int i = 0; i < L.Length; i++) {
+			printf("%d", L.elements[i]);
+		}
+		printf("\n");
 	}
 	//负向排序结束
 	return True;
@@ -304,6 +347,11 @@ int FinalResultOfNumCoreN(Sqtable& NegativeNumberCount, int SortType, Sqtable& L
 				location++;
 			}
 		}
+		printf("5号排序操作后L表为:");
+		for (int i = 0; i < L.Length; i++) {
+			printf("%d", L.elements[i]);
+		}
+		printf("\n");
 	}
 	else {
 		//负向排序，则直接遍历负表，用负值输出
@@ -317,6 +365,11 @@ int FinalResultOfNumCoreN(Sqtable& NegativeNumberCount, int SortType, Sqtable& L
 				location++;
 			}
 		}
+		printf("6号排序操作后L表为:");
+		for (int i = 0; i < L.Length; i++) {
+			printf("%d", L.elements[i]);
+		}
+		printf("\n");
 	}
 	return True;
 }
@@ -324,17 +377,24 @@ int FinalResultOfNumCoreN(Sqtable& NegativeNumberCount, int SortType, Sqtable& L
 //计数排序核心
 int NumCore(Sqtable& L, int SortType) {
 	//获取计数排序范围
-	int MinNum, MaxNum;
-	for (int i = 0; i <= L.Length - 1; i++) {
-		MaxNum = L.elements[0];
-		MinNum = L.elements[1];
+	int MinNum = 0, MaxNum = 0;
+	MaxNum = L.elements[0];
+	MinNum = L.elements[1];
+	for (int i = 0; i < L.Length ; i++) {
 		if (L.elements[i] > MaxNum) {
 			MaxNum = L.elements[i];
+			//printf("赋值了maxnum");
+			//printf("maxnum=");
+			//printf("%d\n",MaxNum);
 		}
 		else if (L.elements[i] < MinNum) {
 			MinNum = L.elements[i];
 		}
 	}
+	//printf("maxnum=");
+	//printf("%d\n",MaxNum);
+	//printf("minnum=");
+	//printf("%d\n", MinNum);
 	//结果处理
 	if (MaxNum >= 0 && MinNum >= 0) {
 		//自产自销，新建Sqtable数据并初始化，用0填满
@@ -344,6 +404,12 @@ int NumCore(Sqtable& L, int SortType) {
 		MSqt_Initial(PositiveNumberCount);
 		//扩容
 		MSqt_ExtendedSpace(PositiveNumberCount, MaxNum - MinNum + SafeSpace);
+		//printf("MaxNum - MinNum + SafeSpace=");
+		//printf("%d\n", MaxNum - MinNum + SafeSpace);
+		//printf("PositiveNumberCount元素指针为  ");
+		//printf("%d\n", PositiveNumberCount.elements);
+		//printf("PositiveNumberCount长度为  ");
+		//printf("%d\n", PositiveNumberCount.Length);
 		//置0
 		MSqt_FillWithZero(PositiveNumberCount);
 		//遍历计数
@@ -417,42 +483,44 @@ int MSqt_Sort(Sqtable &L,int SortType) {
 		return  1007;
 	}
 }
-
+//查重
+int MSqt_DuplicateChecking(Sqtable &L) {
+	for (int i = 0; i < L.Length; i++) {
+		for (int b = i+1; b < L.Length-1;b++) {
+			if (L.elements[i]==L.elements[b]) {
+				MSqt_Drop(L,b);
+			}
+		}
+	}
+	return True;
+}
 
 
 //两顺序表归并
 Sqtable MSqt_Merge(Sqtable &MainTable, Sqtable OtherTable,bool IsOrderly,bool CanNumberRepeat,bool RepeatOperationOnMainTable) {
-	if (RepeatOperationOnMainTable) {
+	if (!RepeatOperationOnMainTable) {
 		//第一步处理：创建新表或操作旧表
-		Sqtable *newtable;
-		MSqt_Initial(*newtable);
+		Sqtable newtable;
+		MSqt_Initial(newtable);
 		for (int i = 0; i <= MainTable.Length - 1; i++) {
-			MSqt_Add(*newtable, MainTable.elements[i]);
+			MSqt_Add(newtable, MainTable.elements[i]);
 		}
 		for (int i = 0; i <= OtherTable.Length - 1; i++) {
-			MSqt_Add(*newtable, OtherTable.elements[i]);
+			MSqt_Add(newtable, OtherTable.elements[i]);
 		}
 		if (IsOrderly) {
 			//第二步处理：是否排序
-			MSqt_Sort(*newtable, 0);
+			MSqt_Sort(newtable, 0);
 			if (CanNumberRepeat) {
 				//第三步处理：是否查重
 				//RepeatOperationOnMainTable&&IsOrderly&&CanNumberRepeat
-				return *newtable;
+				return newtable;
 			}
 			else {
 				//第三步处理：是否查重
 				//RepeatOperationOnMainTable&&IsOrderly   NO(NumberRepeat)
-				int Number = newtable->elements[0];
-				for (int i = 1; i <= newtable->Length - 1; i++) {
-					if (newtable->elements[i] > Number) {
-						Number = newtable->elements[i];
-					}
-					else {
-						MSqt_Drop(*newtable, i);
-					}
-				}
-				return *newtable;
+				MSqt_DuplicateChecking(newtable);
+				return newtable;
 			}
 		}
 		else {
@@ -462,19 +530,13 @@ Sqtable MSqt_Merge(Sqtable &MainTable, Sqtable OtherTable,bool IsOrderly,bool Ca
 			if (CanNumberRepeat) {
 				//第三步处理：是否查重
 				//RepeatOperationOnMainTable&&CanNumberRepeat    NO(Orderly)
-				return *newtable;
+				return newtable;
 			}
 			else {
 				//第三步处理：是否查重
 				//RepeatOperationOnMainTable      NO(Orderly&&NumberRepeat)
-				for (int i = 0; i <= newtable->Length - 1; i++) {
-					for (int b = i + 1; b <= newtable->Length - 1; b++) {
-						if (newtable->elements[i] == newtable->elements[b]) {
-							MSqt_Drop(*newtable, b);
-						}
-					}
-				}
-				return *newtable;
+				MSqt_DuplicateChecking(newtable);
+				return newtable;
 			}
 		}
 	}
@@ -495,14 +557,7 @@ Sqtable MSqt_Merge(Sqtable &MainTable, Sqtable OtherTable,bool IsOrderly,bool Ca
 				//第三步处理：是否查重
 				//IsOrderly     NO(Orderly&&RepeatOperationOnMainTable)
 				int Number = MainTable.elements[0];
-				for (int i = 1; i <= MainTable.Length - 1; i++) {
-					if (MainTable.elements[i] > Number) {
-						Number = MainTable.elements[i];
-					}
-					else {
-						MSqt_Drop(MainTable, i);
-					}
-				}
+				MSqt_DuplicateChecking(MainTable);
 				return MainTable;
 			}
 		}
@@ -518,13 +573,7 @@ Sqtable MSqt_Merge(Sqtable &MainTable, Sqtable OtherTable,bool IsOrderly,bool Ca
 			else {
 				//第三步处理：是否查重
 				//NO(RepeatOperationOnMainTable&&Orderly&&NumberRepeat)
-				for (int i = 0; i <= MainTable.Length - 1; i++) {
-					for (int b = i + 1; b <= MainTable.Length - 1; b++) {
-						if (MainTable.elements[i] == MainTable.elements[b]) {
-							MSqt_Drop(MainTable, b);
-						}
-					}
-				}
+				MSqt_DuplicateChecking(MainTable);
 				return MainTable;
 			}
 		}
